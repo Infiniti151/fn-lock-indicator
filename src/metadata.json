@@ -1,0 +1,10 @@
+{
+  "name": "Fn Lock Indicator",
+  "description": "Zero-polling Fn Lock indicator using Keyd backend",
+  "uuid": "fn-lock-indicator@infiniti151.github.io",
+  "shell-version": [
+    "50"
+  ],
+  "url": "https://github.com/Infiniti151/fn-lock-indicator",
+  "version": 1
+}

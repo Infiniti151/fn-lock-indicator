@@ -1,0 +1,52 @@
+name: Release Extension
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag to release (e.g. v10)'
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses:actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y gnome-shell
+
+      - name: Sync metadata.json version with Git tag
+        run: |
+          # Use manual input if provided, otherwise fall back to git tag ref
+          TAG="${{ inputs.tag_name || github.ref_name }}"
+          
+          # Strip leading 'v' from tag (e.g., 'v5' -> '5')
+          VERSION_NUM=$(echo "$TAG" | sed 's/^v//')
+          
+          # Update numeric version field in src/metadata.json
+          jq --argjson ver "$VERSION_NUM" '.version = $ver' src/metadata.json > src/metadata.tmp.json
+          mv src/metadata.tmp.json src/metadata.json
+
+      - name: Build extension archive
+        run: |
+          cd src
+          gnome-extensions pack --force
+          mv *.shell-extension.zip ../
+
+      - name: Attest zip
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4
+        with:
+          subject-path: ./*.shell-extension.zip
+
+      - name: Create Release
+        uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3
+        with:
+          tag_name: ${{ inputs.tag_name || github.ref_name }}
+          name: Release ${{ inputs.tag_name || github.ref_name }}
+          files: ./*.shell-extension.zip

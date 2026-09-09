@@ -1,0 +1,73 @@
+<!--
+  Copyright (C) 2026 Infiniti151
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.fn-lock-indicator" path="/org/gnome/shell/extensions/fn-lock-indicator/">
+    <key name="color-on" type="s">
+      <default>'rgb(121,233,24)'</default>
+      <summary>Color when Fn Lock is ON</summary>
+    </key>
+    <key name="color-off" type="s">
+      <default>'rgb(244,7,7)'</default>
+      <summary>Color when Fn Lock is OFF</summary>
+    </key>
+    <key name="indicator-position" type="s">
+      <choices>
+        <choice value="left"/>
+        <choice value="center"/>
+        <choice value="right"/>
+      </choices>
+      <default>'left'</default>
+      <summary>Position of the indicator in the panel</summary>
+    </key>
+    <key name="show-toast" type="b">
+      <default>true</default>
+      <summary>Show a toast notification on toggle</summary>
+    </key>
+    <key name="indicator-opacity" type="i">
+      <range min="0" max="100"/>
+      <default>100</default>
+      <summary>Opacity of the indicator</summary>
+    </key>
+    <key name="indicator-style" type="s">
+      <choices>
+        <choice value="dot"/>
+        <choice value="status"/>
+        <choice value="alt"/>
+        <choice value="fisheye"/>
+        <choice value="small_square"/>
+        <choice value="diamond"/>
+        <choice value="toggle"/>
+        <choice value="circuit"/>
+        <choice value="power"/>
+        <choice value="command"/>
+        <choice value="arrow"/>
+        <choice value="dot_matrix"/>
+        <choice value="shield"/>
+        <choice value="hollow_box"/>
+        <choice value="lines"/>
+        <choice value="lock"/>
+      </choices>
+      <default>'dot'</default> <summary>The Unicode character style for the panel</summary>
+    </key>
+    <key name="layer-name" type="s">
+      <default>'main'</default>
+      <summary>The keyd layer name to monitor</summary>
+      <description>This is dynamically populated from your keyd config.</description>
+    </key>
+    <key name="hide-on-disable" type="b">
+      <default>false</default>
+      <summary>Hide the indicator when Fn-Lock is off</summary>
+    </key>
+    <key name="left-click-toggle" type="b">
+      <default>false</default>
+      <summary>Enable left-click toggle</summary>
+    </key>
+    <key name="left-click-command" type="s">
+      <default>'ydotool key 148:1 148:0'</default>
+      <summary>Command to run on left click</summary>
+    </key>
+  </schema>
+</schemalist>
