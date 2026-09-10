@@ -10,6 +10,11 @@ The extension uses **[keyd](https://github.com/rvaiya/keyd)** layer events to de
 >[!note]
 > This extension does not track hardware Fn Lock.
 
+## Demo
+
+<video src="https://github.com/user-attachments/assets/b5b3732d-d911-4e0f-83ae-8f6d0ca6d5c0" controls="controls" style="max-width: 100%;">
+</video>
+
 ## How It Works
 
 Many laptop keyboards do not expose their Fn Lock state through a standard Linux input event.
