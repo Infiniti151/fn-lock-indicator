@@ -53,46 +53,39 @@ The extension therefore does **not** attempt to detect a physical Fn Lock state 
 
 ### Arch Linux
 
-`keyd` is available directly from the official `extra` repository.
+`keyd` is available in the official `extra` repository:
 
 ```bash
 sudo pacman -S keyd
-sudo systemctl enable --now keyd
-```
-
-Verify that the service is running:
-
-```bash
-systemctl status keyd
 ```
 
 ### Fedora
 
-On Fedora, `keyd` can be installed through the `alternateved/keyd` COPR repository.
+`keyd` isn't in the official Fedora repositories, so install it from the `alternateved/keyd` COPR repository:
 
 ```bash
 sudo dnf copr enable alternateved/keyd
 sudo dnf install keyd
-sudo systemctl enable --now keyd
-```
-
-Verify that the service is running:
-
-```bash
-systemctl status keyd
 ```
 
 ### Ubuntu
 
-On newer Ubuntu releases, `keyd` may be available directly through `apt`:
+**Ubuntu 26.04 and newer:** `keyd` is available in the official repositories:
 
 ```bash
 sudo apt update
 sudo apt install keyd
-sudo systemctl enable --now keyd
 ```
 
-If the package is unavailable for your Ubuntu release, keyd can be built from source:
+**Ubuntu 20.04 to 25.10:** install `keyd` from the keyd PPA:
+
+```bash
+sudo add-apt-repository ppa:keyd-team/ppa
+sudo apt update
+sudo apt install keyd
+```
+
+**Older than 20.04:** the PPA doesn't support these releases, so build `keyd` from source:
 
 ```bash
 sudo apt install build-essential git
@@ -100,10 +93,17 @@ git clone https://github.com/rvaiya/keyd.git
 cd keyd
 make
 sudo make install
+```
+
+### Enable and verify
+
+Enable and start `keyd`:
+
+```bash
 sudo systemctl enable --now keyd
 ```
 
-Verify the service:
+Verify that the service is running:
 
 ```bash
 systemctl status keyd
@@ -179,23 +179,24 @@ If your configuration uses a different layer name, make sure the extension's con
 Installing from a packaged release does not require developer tools or manual schema compilation.
 
 1. Download the latest `.shell-extension.zip` file from the [Releases](https://github.com/Infiniti151/fn-lock-indicator/releases) page.
-2. Install the extension using the GNOME Extensions CLI:
+2. Install the extension with the GNOME Extensions CLI, from the folder containing the download:
+
    ```bash
    gnome-extensions install --force fn-lock-indicator@infiniti151.github.io.shell-extension.zip
    ```
-3. Reload your GNOME Session:
 
-   X11: Press Alt + F2 to open the Run Command dialog, type r and then Enter to restart the Gnome Shell.
-
-   Wayland: Logout using the GUI or with `gnome-session-quit --logout --no-prompt` in the terminal.
+3. [Restart GNOME Shell](#restarting-gnome-shell).
 
 4. Enable the extension:
-    ```bash
-    gnome-extensions enable fn-lock-indicator@infiniti151.github.io
-    ```
+
+   ```bash
+   gnome-extensions enable fn-lock-indicator@infiniti151.github.io
+   ```
 
 ### Option 2: Install from Source
-   
+
+This requires `make` and `glib-compile-schemas`, which is included with GLib and already present on GNOME desktops. To check, run `command -v glib-compile-schemas`.
+
 Clone the repository:
 
 ```bash
@@ -203,32 +204,36 @@ git clone https://github.com/Infiniti151/fn-lock-indicator.git
 cd fn-lock-indicator
 ```
 
-The project provides a small Makefile to simplify common operations.
+The project provides a small Makefile for common operations:
 
 | Command          | Description                                              |
 | ---------------- | -------------------------------------------------------- |
 | `make install`   | Installs the extension and compiles its GSettings schema |
-| `make enable`    | Enables the GNOME Shell extension                        |
-| `make disable`   | Disables the GNOME Shell extension                       |
+| `make enable`    | Enables the extension                                    |
+| `make disable`   | Disables the extension                                   |
 | `make uninstall` | Removes the installed extension                          |
 
-A typical first-time setup is therefore:
+For a first-time setup:
 
-1. Install
+1. Install the extension:
+
    ```bash
    make install
    ```
 
-2. Reload your GNOME Session:
+2. [Restart GNOME Shell](#restarting-gnome-shell).
 
-   X11: Press Alt + F2 to open the Run Command dialog, type r and then Enter to restart the Gnome Shell.
+3. Enable the extension:
 
-   Wayland: Logout using the GUI or with `gnome-session-quit --logout --no-prompt` in the terminal.
-
-3. Enable
    ```bash
    make enable
    ```
+
+### Restarting GNOME Shell
+
+- **X11:** press `Alt`+`F2`, type `r`, and press `Enter`.
+- **Wayland:** log out and back in using the GUI, or run `gnome-session-quit --logout --no-prompt`.
+
 ## License
 
 This project is distributed under the license included in [`LICENSE`](LICENSE).
