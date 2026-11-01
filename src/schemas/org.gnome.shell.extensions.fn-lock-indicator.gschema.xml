@@ -1,10 +1,11 @@
 <!--
-  Copyright (C) 2026 Infiniti151
-  SPDX-License-Identifier: GPL-3.0-or-later
+SPDX-FileCopyrightText: 2026 Infiniti151
+SPDX-License-Identifier: GPL-3.0-or-later
 -->
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-  <schema id="org.gnome.shell.extensions.fn-lock-indicator" path="/org/gnome/shell/extensions/fn-lock-indicator/">
+  <schema id="org.gnome.shell.extensions.fn-lock-indicator"
+    path="/org/gnome/shell/extensions/fn-lock-indicator/">
     <key name="color-on" type="s">
       <default>'rgb(121,233,24)'</default>
       <summary>Color when Fn Lock is ON</summary>
@@ -15,9 +16,9 @@
     </key>
     <key name="indicator-position" type="s">
       <choices>
-        <choice value="left"/>
-        <choice value="center"/>
-        <choice value="right"/>
+        <choice value="left" />
+        <choice value="center" />
+        <choice value="right" />
       </choices>
       <default>'left'</default>
       <summary>Position of the indicator in the panel</summary>
@@ -27,30 +28,31 @@
       <summary>Show a toast notification on toggle</summary>
     </key>
     <key name="indicator-opacity" type="i">
-      <range min="0" max="100"/>
+      <range min="0" max="100" />
       <default>100</default>
       <summary>Opacity of the indicator</summary>
     </key>
     <key name="indicator-style" type="s">
       <choices>
-        <choice value="dot"/>
-        <choice value="status"/>
-        <choice value="alt"/>
-        <choice value="fisheye"/>
-        <choice value="small_square"/>
-        <choice value="diamond"/>
-        <choice value="toggle"/>
-        <choice value="circuit"/>
-        <choice value="power"/>
-        <choice value="command"/>
-        <choice value="arrow"/>
-        <choice value="dot_matrix"/>
-        <choice value="shield"/>
-        <choice value="hollow_box"/>
-        <choice value="lines"/>
-        <choice value="lock"/>
+        <choice value="dot" />
+        <choice value="status" />
+        <choice value="alt" />
+        <choice value="fisheye" />
+        <choice value="small_square" />
+        <choice value="diamond" />
+        <choice value="toggle" />
+        <choice value="circuit" />
+        <choice value="power" />
+        <choice value="command" />
+        <choice value="arrow" />
+        <choice value="dot_matrix" />
+        <choice value="shield" />
+        <choice value="hollow_box" />
+        <choice value="lines" />
+        <choice value="lock" />
       </choices>
-      <default>'dot'</default> <summary>The Unicode character style for the panel</summary>
+      <default>'dot'</default>
+      <summary>The Unicode character style for the panel</summary>
     </key>
     <key name="layer-name" type="s">
       <default>'main'</default>
