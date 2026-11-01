@@ -3,11 +3,11 @@ name: Release Extension
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
   workflow_dispatch:
     inputs:
       tag_name:
-        description: 'Tag to release (e.g. v10)'
+        description: "Tag to release (e.g. v10)"
         required: true
         type: string
 
@@ -19,30 +19,48 @@ jobs:
       contents: write
       attestations: write
       artifact-metadata: write
+    env:
+      TAG: ${{ inputs.tag_name || github.ref_name }}
     steps:
+      - name: Validate tag
+        run: |
+          [[ "$TAG" =~ ^v[0-9]+$ ]] || { echo "::error title=Invalid tag::Tag must look like v10 (e.g. v11)"; exit 1; }
+
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Sync metadata.json version with tag
+        run: |
+          jq --argjson ver "${TAG#v}" '.version = $ver' src/metadata.json > src/metadata.tmp.json
+          mv src/metadata.tmp.json src/metadata.json
+
+      - name: Commit version bump to main
+        id: commit
+        uses: suzuki-shunsuke/commit-action@5eaa5ecce3ffe93d09a85b946dc5136e3713b1b7 # v1.1.0
+        with:
+          branch: main
+          files: src/metadata.json
+          commit_message: "🤖 Automated version bump to ${{ env.TAG }} [skip ci]"
+          fail_on_self_push: false
+
+      - name: Point tag at the bump commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUMP_SHA: ${{ steps.commit.outputs.sha }}
+        run: |
+          # If metadata.json already had the right version, nothing was committed
+          SHA="${BUMP_SHA:-$(git rev-parse HEAD)}"
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG" >/dev/null 2>&1; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/git/refs/tags/$TAG" -f sha="$SHA" -F force=true
+          else
+            gh api -X POST "repos/$GITHUB_REPOSITORY/git/refs" -f ref="refs/tags/$TAG" -f sha="$SHA"
+          fi
 
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y gnome-shell
 
-      - name: Sync metadata.json version with Git tag
-        run: |
-          # Use manual input if provided, otherwise fall back to git tag ref
-          TAG="${{ inputs.tag_name || github.ref_name }}"
-          
-          # Strip leading 'v' from tag (e.g., 'v5' -> '5')
-          VERSION_NUM=$(echo "$TAG" | sed 's/^v//')
-          
-          # Update numeric version field in src/metadata.json
-          jq --argjson ver "$VERSION_NUM" '.version = $ver' src/metadata.json > src/metadata.tmp.json
-          mv src/metadata.tmp.json src/metadata.json
-
       - name: Build extension archive
-        run: |
-          cd src
-          gnome-extensions pack --force
-          mv *.shell-extension.zip ../
+        run: gnome-extensions pack --force --out-dir=. src
 
       - name: Attest zip
         uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4
@@ -52,6 +70,6 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3
         with:
-          tag_name: ${{ inputs.tag_name || github.ref_name }}
-          name: Release ${{ inputs.tag_name || github.ref_name }}
+          tag_name: ${{ env.TAG }}
+          name: Release ${{ env.TAG }}
           files: ./*.shell-extension.zip
